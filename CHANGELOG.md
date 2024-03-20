@@ -1,5 +1,9 @@
 ## v0.3.0 (2024-03-20)
 
+- Minor bugfix (bug introduced in v0.3.0)
+
+## v0.3.0 (2024-03-20)
+
 - Add support for mode (either reports or annotations).
 
 ## v0.2.2 (2024-03-20)
