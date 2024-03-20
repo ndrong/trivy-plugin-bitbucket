@@ -41,7 +41,7 @@ def make_bitbucket_issues(vulnerabilities):
     return [
         {
             "title": f"Issue (Severity: {TRIVY_SEVERITY[vuln['Severity']]})",
-            "type": "",
+            "type": "TEXT",
             "value": vuln["Description"]
         }
         for vuln in vulnerabilities

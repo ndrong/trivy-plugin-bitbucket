@@ -97,12 +97,12 @@ class TestMakeBitbucketIssues(unittest.TestCase):
         assert issues == [
             {
                 "title": f"Issue (Severity: Low)",
-                "type": "",
+                "type": "TEXT",
                 "value": "desc1"
             },
             {
                 "title": f"Issue (Severity: Medium)",
-                "type": "",
+                "type": "TEXT",
                 "value": "desc2"
             },
         ]
