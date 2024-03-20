@@ -68,6 +68,9 @@ def main(args):
     file_path = None
     if len(args) > 3 and args[2] == "-o":
         file_path = args[3]
+    # Specify optional output file without flag -o (second argument)
+    elif len(args) > 2:
+        file_path = args[2]
 
     report = load_trivy_report(fname)
     vulnerabilities = parse_trivy_report(report)
