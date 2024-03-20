@@ -19,6 +19,11 @@ def load_trivy_report(fname):
         return json.loads(fobj.read())
 
 
+def write_bitbucket_report(report, file_path):
+    with open(file_path, "w") as fobj:
+        fobj.write(report)
+
+
 def parse_trivy_report(report):
     for result in report.get("Results", []):
         for vuln in result.get("Vulnerabilities", []):
@@ -32,7 +37,7 @@ def parse_trivy_report(report):
             yield vuln
 
 
-def make_bitbucket_issues(vulnerabilities, file_path=None):
+def make_bitbucket_issues(vulnerabilities):
     return [
         {
             "title": f"Issue (Severity: {TRIVY_SEVERITY[vuln['Severity']]})",
@@ -59,15 +64,18 @@ def main(args):
     if not os.path.exists(fname):
         sys.exit(f"{LOG_PREFIX} file not found: {fname}")
 
-    arg_filePath = None
-    for arg in args[2:]:
-        if "filePath" in arg:
-            arg_filePath = arg.split("=")[-1].strip()
+    # Specify optional output file path with flag -o
+    file_path = None
+    if len(args) > 3 and args[2] == "-o":
+        file_path = args[3]
 
     report = load_trivy_report(fname)
     vulnerabilities = parse_trivy_report(report)
-    issues = make_bitbucket_issues(vulnerabilities, file_path=arg_filePath)
+    issues = make_bitbucket_issues(vulnerabilities)
     report = make_bitbucket_report(issues)
+
+    if file_path:
+        write_bitbucket_report(report, file_path)
     print(report)
 
 

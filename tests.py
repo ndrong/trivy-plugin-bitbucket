@@ -7,6 +7,7 @@ from bitbucket import (
     parse_trivy_report,
     make_bitbucket_issues,
     make_bitbucket_report,
+    write_bitbucket_report,
 )
 
 
@@ -18,6 +19,15 @@ class TestLoadTrivyReport(unittest.TestCase):
 
         report = load_trivy_report(fname)
         assert report == {"a": []}
+
+class TestWriteBitbucketReport(unittest.TestCase):
+    def test_ok(self):
+        _, fname = tempfile.mkstemp()
+        report = {"a": []}
+        write_bitbucket_report(json.dumps(report), fname)
+
+        with open(fname) as fobj:
+            assert json.loads(fobj.read()) == report
 
 
 class TestParseTrivyReport(unittest.TestCase):
@@ -83,7 +93,7 @@ class TestMakeBitbucketIssues(unittest.TestCase):
             "Target": "target2",
         }
 
-        issues = make_bitbucket_issues([vuln1, vuln2], file_path="path1")
+        issues = make_bitbucket_issues([vuln1, vuln2])
         assert issues == [
             {
                 "title": f"Issue (Severity: Low)",
