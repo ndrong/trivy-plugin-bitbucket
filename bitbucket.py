@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+import argparse
 
 LOG_PREFIX = "[trivy][plugins][bitbucket]"
 TRIVY_SEVERITY = {
@@ -48,6 +49,17 @@ def make_bitbucket_issues(vulnerabilities):
     ]
 
 
+def make_bitbucket_annotations(vulnerabilities):
+    return [
+        {
+            "title": f"{vuln["VulnerabilityID"]} ({TRIVY_SEVERITY[vuln['Severity']]})",
+            "annotation_type": "VULNERABILITY",
+            "summary": vuln["Description"]
+        }
+        for vuln in vulnerabilities
+    ]
+
+
 def make_bitbucket_report(issues):
     return json.dumps({
 	"title": "Security scan report",
@@ -60,22 +72,37 @@ def make_bitbucket_report(issues):
 
 
 def main(args):
-    fname = args[1]
+    # Parse arguments using argparse
+    if len(args) < 2:
+        sys.exit(f"{LOG_PREFIX} missing required argument: <trivy-report.json>")
+
+    parser = argparse.ArgumentParser(
+                        prog='trivy-bitbucket')
+    parser.add_argument('mode', type=str, help='Mode of operation (report, annotate)')
+    parser.add_argument('fname', type=str, help='Trivy report file')
+    parser.add_argument('file_path', type=str, help='Trivy report file')
+    parser.add_argument('-o', '--output', type=str, help='Trivy report file')
+    args = parser.parse_args()
+
+    mode = args.mode
+    if mode not in ['report', 'annotate']:
+        sys.exit(f"{LOG_PREFIX} invalid mode: {mode}")
+
+    fname = args.fname
     if not os.path.exists(fname):
         sys.exit(f"{LOG_PREFIX} file not found: {fname}")
 
-    # Specify optional output file path with flag -o
-    file_path = None
-    if len(args) > 3 and args[2] == "-o":
-        file_path = args[3]
-    # Specify optional output file without flag -o (second argument)
-    elif len(args) > 2:
-        file_path = args[2]
+    file_path = args.file_path if args.file_path else args.output
 
     report = load_trivy_report(fname)
     vulnerabilities = parse_trivy_report(report)
-    issues = make_bitbucket_issues(vulnerabilities)
-    report = make_bitbucket_report(issues)
+
+    if mode == "report":
+        issues = make_bitbucket_issues(vulnerabilities)
+        report = make_bitbucket_report(issues)
+    elif mode == "annotate":
+        issues = make_bitbucket_annotations(vulnerabilities)
+        report = json.dumps(issues, indent=2)
 
     if file_path:
         write_bitbucket_report(report, file_path)

@@ -6,6 +6,7 @@ from bitbucket import (
     load_trivy_report,
     parse_trivy_report,
     make_bitbucket_issues,
+    make_bitbucket_annotations,
     make_bitbucket_report,
     write_bitbucket_report,
 )
@@ -19,6 +20,7 @@ class TestLoadTrivyReport(unittest.TestCase):
 
         report = load_trivy_report(fname)
         assert report == {"a": []}
+
 
 class TestWriteBitbucketReport(unittest.TestCase):
     def test_ok(self):
@@ -104,6 +106,36 @@ class TestMakeBitbucketIssues(unittest.TestCase):
                 "title": f"Issue (Severity: Medium)",
                 "type": "TEXT",
                 "value": "desc2"
+            },
+        ]
+
+
+class TestMakeBitbucketAnnotations(unittest.TestCase):
+    def test_issue_formatting(self):
+        vuln1 = {
+            "VulnerabilityID": "vuln1",
+            "Severity": "LOW",
+            "Description": "desc1",
+            "Target": "target1",
+        }
+        vuln2 = {
+            "VulnerabilityID": "vuln2",
+            "Severity": "MEDIUM",
+            "Description": "desc2",
+            "Target": "target2",
+        }
+
+        issues = make_bitbucket_annotations([vuln1, vuln2])
+        assert issues == [
+            {
+                "title": "vuln1 (Low)",
+                "annotation_type": "VULNERABILITY",
+                "summary": "desc1"
+            },
+            {
+                "title": "vuln2 (Medium)",
+                "annotation_type": "VULNERABILITY",
+                "summary": "desc2"
             },
         ]
 
