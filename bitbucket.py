@@ -52,7 +52,7 @@ def make_bitbucket_issues(vulnerabilities):
 def make_bitbucket_annotations(vulnerabilities):
     return [
         {
-            "title": f"{vuln["VulnerabilityID"]} ({TRIVY_SEVERITY[vuln['Severity']]})",
+            "title": f"{vuln.get("VulnerabilityID")} ({TRIVY_SEVERITY[vuln['Severity']]})",
             "annotation_type": "VULNERABILITY",
             "summary": vuln["Description"]
         }
