@@ -128,11 +128,13 @@ class TestMakeBitbucketAnnotations(unittest.TestCase):
         issues = make_bitbucket_annotations([vuln1, vuln2])
         assert issues == [
             {
+                "external_id": "vuln-1",
                 "title": "vuln1 (Low)",
                 "annotation_type": "VULNERABILITY",
                 "summary": "desc1"
             },
             {
+                "external_id": "vuln-2",
                 "title": "vuln2 (Medium)",
                 "annotation_type": "VULNERABILITY",
                 "summary": "desc2"

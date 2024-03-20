@@ -1,10 +1,10 @@
 name: "bitbucket"
 repository: github.com/ndrong/trivy-plugin-bitbucket
-version: "0.3.1"
+version: "0.3.2"
 usage: Convert Trivy JSON report to Bitbucket format
 description: |-
   A Trivy plugin that converts JSON report to Bitbucket compatible format (https://developer.atlassian.com/cloud/bitbucket/rest/api-group-reports).
   Usage: trivy bitbucket TRIVY-REPORT > BITBUCKET-REPORT
 platforms:
-  - uri: https://github.com/ndrong/trivy-plugin-bitbucket/releases/download/v0.3.1/trivy-bitbucket.tar.gz
+  - uri: https://github.com/ndrong/trivy-plugin-bitbucket/releases/download/v0.3.2/trivy-bitbucket.tar.gz
     bin: bitbucket.py

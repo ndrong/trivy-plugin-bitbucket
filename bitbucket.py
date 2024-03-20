@@ -5,6 +5,7 @@ import os
 import sys
 import argparse
 
+
 LOG_PREFIX = "[trivy][plugins][bitbucket]"
 TRIVY_SEVERITY = {
     "UNKNOWN": "Unknown",
@@ -52,11 +53,12 @@ def make_bitbucket_issues(vulnerabilities):
 def make_bitbucket_annotations(vulnerabilities):
     return [
         {
+            "external_id": f"vuln-{idx + 1}",
             "title": f"{vuln['VulnerabilityID']} ({TRIVY_SEVERITY[vuln['Severity']]})",
             "annotation_type": "VULNERABILITY",
             "summary": vuln["Description"]
         }
-        for vuln in vulnerabilities
+        for idx, vuln in enumerate(vulnerabilities)
     ]
 
 
