@@ -6,5 +6,5 @@ description: |-
   A Trivy plugin that converts JSON report to Bitbucket compatible format (https://developer.atlassian.com/cloud/bitbucket/rest/api-group-reports).
   Usage: trivy bitbucket TRIVY-REPORT > BITBUCKET-REPORT
 platforms:
-  - uri: https://github.com/ndrong/trivy-plugin-bitbucket/releases
+  - uri: https://github.com/ndrong/trivy-plugin-bitbucket/releases/download/v0.1.0/trivy-bitbucket.tar.gz
     bin: bitbucket.py
